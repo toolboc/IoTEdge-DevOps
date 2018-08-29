@@ -1,0 +1,43 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "SampleModule Remote Debug (.NET Core)",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:pickRemoteProcess}",
+      "pipeTransport": {
+        "pipeProgram": "docker",
+        "pipeArgs": [
+          "exec",
+          "-i",
+          "SampleModule",
+          "sh",
+          "-c"
+        ],
+        "debuggerPath": "~/vsdbg/vsdbg",
+        "pipeCwd": "${workspaceFolder}",
+        "quoteArgs": true
+      },
+      "sourceFileMap": {
+        "/app": "${workspaceFolder}/modules/SampleModule"
+      },
+      "justMyCode": true
+    },
+    {
+      "name": "SampleModule Local Debug (.NET Core)",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceRoot}/modules/SampleModule/bin/Debug/netcoreapp2.0/SampleModule.dll",
+      "args": [],
+      "cwd": "${workspaceRoot}/modules/SampleModule",
+      "internalConsoleOptions": "openOnSessionStart",
+      "stopAtEntry": false,
+      "console": "internalConsole",
+      "env": {
+        "EdgeHubConnectionString": "${config:azure-iot-edge.EdgeHubConnectionString}",
+        "EdgeModuleCACertificateFile": "${config:azure-iot-edge.EdgeModuleCACertificateFile}"
+      }
+    }
+  ]
+}
