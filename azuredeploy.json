@@ -2,24 +2,19 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "IotHubs_IoTEdge_DevOps_iot_hub_name": {
-            "defaultValue": "IoTEdgeDevOps-iothub",
-            "type": "String"
-        },
-        "registries_IoTEdgeDevOps_name": {
-            "defaultValue": "IoTEdgeDevOps",
-            "type": "String"
-        },
-        "components_IoTEdge_DevOps_app_insights_name": {
-            "defaultValue": "IoTEdgeDevOps-appinsights",
-            "type": "String"
-        },
-        "provisioningServices_IoTEdgeDevOps_provisioning_name": {
-            "defaultValue": "IoTEdgeDevOps-provisioning",
-            "type": "String"
+        "ResourceNameSuffix": {
+          "type": "string",
+          "metadata": {
+            "description": "The suffix string to add to the pressuplied name for the Azure Resources."
+          }
         }
+      },
+    "variables": {
+        "IoT_Hub_name": "[concat('IoTEdgeDevOps-iothub-', parameters('ResourceNameSuffix'))]",
+        "Azure_Container_Registry_name": "[concat('IoTEdgeDevOps', parameters('ResourceNameSuffix'))]",
+        "App_Insights_name": "[concat('IoTEdgeDevOps-appinsights-', parameters('ResourceNameSuffix'))]",
+        "IoT_Device_Provisioning_Services_name": "[concat('IoTEdgeDevOps-provisioning-', parameters('ResourceNameSuffix'))]"
     },
-    "variables": {},
     "resources": [
         {
             "type": "Microsoft.ContainerRegistry/registries",
@@ -27,7 +22,7 @@
                 "name": "Standard",
                 "tier": "Standard"
             },
-            "name": "[parameters('registries_IoTEdgeDevOps_name')]",
+            "name": "[variables('Azure_Container_Registry_name')]",
             "apiVersion": "2017-10-01",
             "location": "eastus",
             "tags": {},
@@ -44,7 +39,7 @@
                 "tier": "Standard",
                 "capacity": 1
             },
-            "name": "[parameters('IotHubs_IoTEdge_DevOps_iot_hub_name')]",
+            "name": "[variables('IoT_Hub_name')]",
             "apiVersion": "2018-04-01",
             "location": "eastus",
             "tags": {},
@@ -70,7 +65,7 @@
                             "0",
                             "1"
                         ],
-                        "path": "[concat(parameters('IotHubs_IoTEdge_DevOps_iot_hub_name'),'iotedge-devops-iot-hub', parameters('IotHubs_IoTEdge_DevOps_iot_hub_name'))]",
+                        "path": "[concat(variables('IoT_Hub_name'),'iotedge-devops-iot-hub', variables('IoT_Hub_name'))]",
                         "endpoint": "sb://iothub-ns-iotedge-de-714666-25797ba1ac.servicebus.windows.net/"
                     },
                     "operationsMonitoringEvents": {
@@ -80,7 +75,7 @@
                             "0",
                             "1"
                         ],
-                        "path": "[concat(parameters('IotHubs_IoTEdge_DevOps_iot_hub_name'),'iotedge-devops-iot-hub-operationmonitoring')]",
+                        "path": "[concat(variables('IoT_Hub_name'),'iotedge-devops-iot-hub-operationmonitoring')]",
                         "endpoint": "sb://iothub-ns-iotedge-de-714666-25797ba1ac.servicebus.windows.net/"
                     }
                 },
@@ -137,7 +132,7 @@
                 "tier": "Standard",
                 "capacity": 1
             },
-            "name": "[parameters('provisioningServices_IoTEdgeDevOps_provisioning_name')]",
+            "name": "[variables('IoT_Device_Provisioning_Services_name')]",
             "apiVersion": "2017-11-15",
             "location": "eastus",
             "tags": {},
@@ -150,7 +145,7 @@
         {
             "type": "microsoft.insights/components",
             "kind": "other",
-            "name": "[parameters('components_IoTEdge_DevOps_app_insights_name')]",
+            "name": "[variables('App_Insights_name')]",
             "apiVersion": "2015-05-01",
             "location": "eastus",
             "tags": {},
