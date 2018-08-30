@@ -49,6 +49,16 @@
               "image": "${MODULES.SampleModule.amd64}",
               "createOptions": ""
             }
+          },
+          "dockerappinsights": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+                "image": "microsoft/applicationinsights",
+                "createOptions": "{\"HostConfig\":{\"Binds\":[\"/var/run/docker.sock:/docker.sock\"]},\"Mounts\":[{\"Type\":\"bind\",\"Source\":\"/var/run/docker.sock\",\"Destination\":\"/docker.sock\",\"Mode\":\"\",\"RW\":true,\"Propagation\":\"rprivate\"}],\"Cmd\":[\"ikey=#{appinsights.instrumentationkey}#\"]}"
+            }
           }
         }
       }
