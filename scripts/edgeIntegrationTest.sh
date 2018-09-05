@@ -77,7 +77,7 @@ echo "Validating that all QA devices configured modules are running..."
 for device in ${qaDevices[*]}
 do
         getEdgeAgentTwin
-        deviceModules=($(echo $edgeAgentTwin | jq -r .properties.reported.modules | jq -r to_entries[].key))
+        deviceModules=($(echo $edgeAgentTwin | jq -r .properties.desired.modules | jq -r to_entries[].key))
         echo "Number of modules configured for $device: ${#deviceModules[*]}"
 
         for deviceModule in ${deviceModules[*]}
