@@ -10,6 +10,13 @@ The [Internet of Things](https://en.wikipedia.org/wiki/Internet_of_things) is a 
 
 This Lab will walk through creating a Visual Studio Team Services project repo that employs [Continuous Integration](https://docs.microsoft.com/en-us/azure/devops/what-is-continuous-integration) and [Continuous Delivery](https://docs.microsoft.com/en-us/azure/devops/what-is-continuous-delivery) to publish an IoT Edge deployment to specific devices as part of a [build definition](https://docs.microsoft.com/en-us/cli/vsts/build/definition) and [release pipeline](https://docs.microsoft.com/en-us/vsts/pipelines/release/). 
 
+* [Step 1: Creating Azure Resources](#step-1-creating-azure-resources)
+* [Step 2: Setup Visual Studio Team Services](#step-2-setup-visual-studio-team-services)
+* [Step 3: Setting up Continuous Integration](#step-3-setting-up-continuous-integration)
+* [Step 4: Creating a release pipeline with a Smoke Test](#step-4-creating-a-release-pipeline-with-a-smoke-test)
+* [Step 5: Adding a scalable integration test to a release pipeline ](#step-5-adding-a-scalable-integration-test-to-a-release-pipeline )
+* [Step 6: Monitoring devices with App Insights](#step-6-monitoring-devices-with-app-insights)
+
 ### Step 1: Creating Azure Resources
 
 To get started, we will need to create a few cloud services that will be used in later portions of the lab.  These services are outlined below, with a brief description of how they will be used in later steps.  
@@ -205,4 +212,69 @@ Once you have configured everything appropriately, select "Build and release" =>
 The new release pipeline should begin running:
 
 ![Running Release](/content/RunningReleaseVSTS.PNG)
+
+### Step 5: Adding a scalable integration test to a release pipeline 
+
+Integration testing is important for IoT Edge solutions which rely on services to accomplish desired functionality.  We will setup a scalable deployment of QA Devices using an Azure Kubernetes cluster.  This allows for an ability to deploy a theoretically limitless number of devices into an isolated environment for testing.  In addition, we will be able to monitor these devices using the dockerappinsights module which is configured in [deployment.template.json](/EdgeSolution/deployment.template.json). Completion of this step will require configuration of an Azure Kubernetes Service.
+
+Begin by [creating an Azure Kubernetes Service cluster in the Azure Portal](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough-portal#create-an-aks-cluster).  Once you have completed this step, head back to the release pipeline created in Step 4.
+
+Add a new stage after the "Smoke Test" and select the "Deploy an application to a Kubernetes cluster by using its Helm chart" template:
+
+![Add Helm Template](/content/HelmTemplateVSTS.PNG)
+
+Rename this stage to "Integration":
+
+![Add Integration Step](/content/AddIntegrationStep.PNG)
+
+You will notice that the "Helm init" and "Helm upgrade" tasks require some additional configuration:
+
+![Helm Fix 1](/content/HelmFix1.PNG)
+
+![Helm Fix 2](/content/HelmFix2.PNG)
+
+To fix this, select the stage name and configure the required settings:
+
+![Helm Fix 3](/content/HelmFix3.PNG)
+
+Next, we will configure the "Helm upgrade" task to deploy the helm chart for the "azure-iot-edge-device-container".  Begin by adding a new "Bash" task right before the "Helm upgrade" task. Configure the type to "inline" and add the following:
+
+    helm repo add azure-iot-edge-device-container https://toolboc.github.io/azure-iot-edge-device-container
+    helm repo list
+    helm repo update
+
+![Add Helm Chart](/content/AddHelmChart.PNG)
+
+Next, we will configure the Helm Upgrade task.  Set the Namespace value to "iot-edge-qa", set the Command to "upgrade", set Chart Type to "Name", set the Chart Name to "azure-iot-edge-device-container/azure-iot-edge-device-container", set the Release Name to "iot-edge-qa", set Set Values to:
+
+    spAppUrl=$(spAppUrl),spPassword=$(spPassword),tenantId=$(tenantId),subscriptionId=$(subscriptionId),iothub_name=$(iothub_name),environment=$(environment),replicaCount=2 
+
+and ensure that "Install if release not present", "Recreate Pods", "Force", and "Wait" checkboxes are checked as shown below:
+
+![Configure Helm Upgrade](/content/HelmUpgrade.PNG)
+
+Start a new release and when complete, view  your AKS cluster Dashboard with:
+
+    az aks browse --resource-group <kube-cluster-resource-group> --name <kube-cluster-name>
+
+![k8s Dashboard](/content/k8sDash.PNG)
+
+You will notice that QA devices have been deployed to the cluster.
+
+### Step 6: Monitoring devices with App Insights
+
+Monitoring allows us to perform long running tests against edge modules and provide real-time alerts using Application Insights.  Our EdgeSolution includes a dockerappinsights module which is configured in [deployment.template.json](/EdgeSolution/deployment.template.json).  This module monitors the docker host of each containerized IoT Edge device.
+
+Assuming a device has been deployed and is running, you can monitor the device by viewing the Appication Insights resource deployed in step 1.  
+
+![App Insights Graph](/content/AppInsightsGraph.PNG)
+
+To configure a chart, select "Metrics Explorer" => "Add Chart" => "Edit Chart" and add the following to monitor Block IO for all Edge modules:
+
+![App Insights Block IO](/content/AIBlkio.PNG)
+
+Add the following to monitor the network traffic for all Edge modules:
+
+![App Insights Block IO](/content/AINetworkTraffic.PNG)
+
 
