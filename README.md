@@ -109,3 +109,100 @@ Next, under "Build validation", click "Add build policy" and select the newly cr
 ![Configure Build Policy](/content/BuildPolicyVSTS.PNG)
 
 While this policy is enabled, all commits to feature branches will kick off an execution of the newly created Build pipeline and it must succeed in order for a pull request of those changes to be made to the master branch.
+
+### Step 4: Creating a release pipeline with a Smoke Test
+
+Deployments to devices need to be done under tight control in production environments.  To achieve this, we will create a release pipeline which deploys to QA devices and smoke tests the edge runtime in a containerized device.  This is accomplished by running an instance of the [azure-iot-edge-device-container](https://github.com/toolboc/azure-iot-edge-device-container) which is configured as a QA device then probing the IoT Hub to ensure that QA device receives the desired deployment configuration and is able to successfully run all configured modules.  This test is contained in [edgeSmokeTest.sh](/scripts/edgeSmokeTest.sh)
+
+To begin, select "Build and release" => "Releases" then create a new pipeline with an empty job and save it:
+
+![Create Empty Job](/content/EmptyJobVSTS.PNG)
+
+Now head back to "Build and release" => "Releases" => "New" and select "Import a pipeline":
+
+![Import a pipeline](/content/ImportAPipelineVSTS.PNG)
+
+Download the [release-pipeline.json](/release-pipeline.json) file located in the root of this repo and import it:
+
+![The initial pipeline](/content/InitialPipelineVSTS.PNG)
+
+There are a few things that we will need to fix before we can successfully run the Release Pipeline, specifically Azure Subscription endpoints, Agent Pools, and variable settings, and artifact source. 
+
+To fix the Azure Subscription Endpoints, select "Tasks" => "Create Deployment" and supply the appropriate Azure subscription and Azure Container Registry for the "Azure IoT Edge - Build and Push modules" and "Azure IoT Edge - Deploy to IoT Edge devices" tasks:
+
+![Fix Endpoints 1](/content/FixAzureEndpoints1.PNG)
+
+![Fix Endpoints 2](/content/FixAzureEndpoints2.PNG)
+
+Next select Tasks" => "Smoke Test" and supply the appropriate Azure subscription and Azure Container Registry for the "Remove all registered QA devices" and "Smoke Test" tasks:
+
+![Fix Endpoints 3](/content/FixAzureEndpoints3.PNG)
+
+![Fix Endpoints 4](/content/FixAzureEndpoints4.PNG)
+
+To fix the Agent Pools, select "Tasks" => "Create Deployment" => "Agent Job" and change the Agent Pool to "Hosted Linux Preview:
+
+![Fix Agent Pool 1](/content/AgentPool1.PNG)
+
+![Fix Agent Pool 2](/content/AgentPool2.PNG)
+
+With these fixes applied, you should be able to save the Release pipeline.  It is highly recommended to save at this point if VSTS allows.
+
+To fix the variables, select "Variables":
+
+![Pipeline Variables](/content/PipelineVarsVSTS.PNG)
+
+We will need to modify all variables in brackets (<>)
+
+You may use the same values for `acr.host`, `acr.user`, `acr.password`, and `appinsights.instrumentationkey` that were used in the CI build definition in step 3.
+`iothub_name` is the name of the iot hub that was created in step 1.
+
+For the additional variables, we need to create a service principal by performing the following:
+
+Install the [Azure-Cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) 
+
+Run `az login` to sign in with the azure cli, then run `az account list` to see available subscirptions, and set the appropriate subscription with:
+
+    az account set --subscription <subscriptionid>
+
+Create a Service Principal for your subscription with the azure cli:
+
+    az ad sp create-for-rbac --name <name> --password <password>
+
+You should see output similar to:
+
+    {
+    "appId": "12345678-1234-1234-1234-1234567890ab",
+    "displayName": "azure-iot-edge-device-container-sp",
+    "name": "http://azure-iot-edge-device-container-sp",
+    "password": "MyPassword",
+    "tenant": "abcdefgh-abcd-abcd-abcd-abcdefghijkl"
+    }
+
+Take note of the `name`, `password`, and `tenant` as these values will be used  for `spAppURl`, `spPassword`, and `tenant` respectively. 
+
+Obtain the following Parameters and supply the appropriate values for the remaining release pipeline variables:
+
+| Parameter      | Description |           |
+| -------------- | ------------| --------- |
+| spAppUrl      | The Service Principal app URL | Required  |
+| spPassword   | The Password for the Service Principal | Required |
+| tenantId   | The tenant id for the Service Principal | Required |
+| subscriptionId   | The azure subscription id where the IoT Hub is deployed | Required |
+
+To fix the artifact source, select "Pipeline" and delete the "_IoTEdge-DevOps-CI" artifact:
+
+![Delete Artifact](/content/DeleteArtifact.PNG)
+
+Next, add a new artifact that uses our CI build pipeline as a source:
+
+![Add New Artifact](/content/AddNewArtifact.PNG)
+
+Once you have configured everything appropriately, select "Build and release" => "Releases" then select the newly created Release pipeline and "Create a release":
+
+![Create a Release](/content/CreateReleaseVSTS.PNG)
+
+The new release pipeline should begin running:
+
+![Running Release](/content/RunningReleaseVSTS.PNG)
+

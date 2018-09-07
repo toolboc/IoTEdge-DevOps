@@ -1,0 +1,593 @@
+{
+    "source": 2,
+    "revision": 1,
+    "description": null,
+    "createdBy": {
+      "displayName": "Paul DeCarlo",
+      "url": "https://app.vssps.visualstudio.com/A3dbf67ab-a3a2-46ad-af19-f48a3a5dc7ea/_apis/Identities/902cbc8b-027c-44d2-ad50-8e629d991fef",
+      "_links": {
+        "avatar": {
+          "href": "https://pdecarlo.visualstudio.com/_apis/GraphProfile/MemberAvatars/aad.ZDBlMTUxNTYtYWNmYS03N2Y4LWFkZDItYzRkMDYzODMyYjUz"
+        }
+      },
+      "id": "902cbc8b-027c-44d2-ad50-8e629d991fef",
+      "uniqueName": "pdecarlo@microsoft.com",
+      "imageUrl": "https://pdecarlo.visualstudio.com/_api/_common/identityImage?id=902cbc8b-027c-44d2-ad50-8e629d991fef",
+      "descriptor": "aad.ZDBlMTUxNTYtYWNmYS03N2Y4LWFkZDItYzRkMDYzODMyYjUz"
+    },
+    "createdOn": "2018-09-07T01:27:54.077Z",
+    "modifiedBy": {
+      "displayName": "Paul DeCarlo",
+      "url": "https://app.vssps.visualstudio.com/A3dbf67ab-a3a2-46ad-af19-f48a3a5dc7ea/_apis/Identities/902cbc8b-027c-44d2-ad50-8e629d991fef",
+      "_links": {
+        "avatar": {
+          "href": "https://pdecarlo.visualstudio.com/_apis/GraphProfile/MemberAvatars/aad.ZDBlMTUxNTYtYWNmYS03N2Y4LWFkZDItYzRkMDYzODMyYjUz"
+        }
+      },
+      "id": "902cbc8b-027c-44d2-ad50-8e629d991fef",
+      "uniqueName": "pdecarlo@microsoft.com",
+      "imageUrl": "https://pdecarlo.visualstudio.com/_api/_common/identityImage?id=902cbc8b-027c-44d2-ad50-8e629d991fef",
+      "descriptor": "aad.ZDBlMTUxNTYtYWNmYS03N2Y4LWFkZDItYzRkMDYzODMyYjUz"
+    },
+    "modifiedOn": "2018-09-07T01:27:54.077Z",
+    "isDeleted": false,
+    "variables": {
+      "acr.host": { "value": "<YourAzureContainerRegistryHost>" },
+      "acr.password": { "value": "<YourAzureContainerRegistryPassword>" },
+      "acr.user": { "value": "<YourAzureContainerRegistryUser>" },
+      "appinsights.instrumentationkey": {
+        "value": "<YourAppInsightsInstrumentationKey>"
+      },
+      "deployment_name": { "value": "vsts-deployment-qa" },
+      "environment": { "value": "qa" },
+      "iothub_name": { "value": "<YourIoTHub>" },
+      "spAppUrl": { "value": "<YourServicePrincipalAppUrl>" },
+      "spPassword": { "value": "<YourServicePrincipalPassword" },
+      "subscriptionId": { "value": "<YourSubscriptionId>" },
+      "tenantId": { "value": "<YourTenantId>" }
+    },
+    "variableGroups": [],
+    "environments": [
+      {
+        "id": 4,
+        "name": "Create Deployment",
+        "rank": 1,
+        "owner": {
+          "displayName": "Paul DeCarlo",
+          "url": "https://app.vssps.visualstudio.com/A3dbf67ab-a3a2-46ad-af19-f48a3a5dc7ea/_apis/Identities/902cbc8b-027c-44d2-ad50-8e629d991fef",
+          "_links": {
+            "avatar": {
+              "href": "https://pdecarlo.visualstudio.com/_apis/GraphProfile/MemberAvatars/aad.ZDBlMTUxNTYtYWNmYS03N2Y4LWFkZDItYzRkMDYzODMyYjUz"
+            }
+          },
+          "id": "902cbc8b-027c-44d2-ad50-8e629d991fef",
+          "uniqueName": "pdecarlo@microsoft.com",
+          "imageUrl": "https://pdecarlo.visualstudio.com/_api/_common/identityImage?id=902cbc8b-027c-44d2-ad50-8e629d991fef",
+          "descriptor": "aad.ZDBlMTUxNTYtYWNmYS03N2Y4LWFkZDItYzRkMDYzODMyYjUz"
+        },
+        "variables": {},
+        "variableGroups": [],
+        "preDeployApprovals": {
+          "approvals": [
+            {
+              "rank": 1,
+              "isAutomated": true,
+              "isNotificationOn": false,
+              "id": 10
+            }
+          ],
+          "approvalOptions": {
+            "requiredApproverCount": null,
+            "releaseCreatorCanBeApprover": true,
+            "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+            "enforceIdentityRevalidation": false,
+            "timeoutInMinutes": 0,
+            "executionOrder": 1
+          }
+        },
+        "deployStep": { "id": 13 },
+        "postDeployApprovals": {
+          "approvals": [
+            {
+              "rank": 1,
+              "isAutomated": true,
+              "isNotificationOn": false,
+              "id": 14
+            }
+          ],
+          "approvalOptions": {
+            "requiredApproverCount": null,
+            "releaseCreatorCanBeApprover": true,
+            "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+            "enforceIdentityRevalidation": false,
+            "timeoutInMinutes": 0,
+            "executionOrder": 2
+          }
+        },
+        "deployPhases": [
+          {
+            "deploymentInput": {
+              "parallelExecution": { "parallelExecutionType": "none" },
+              "skipArtifactsDownload": false,
+              "artifactsDownloadInput": {
+                "downloadInputs": [
+                  {
+                    "artifactItems": [],
+                    "alias": "_IoTEdge-DevOps-CI",
+                    "artifactType": "Build",
+                    "artifactDownloadMode": "All"
+                  }
+                ]
+              },
+              "queueId": 10,
+              "demands": [],
+              "enableAccessToken": false,
+              "timeoutInMinutes": 0,
+              "jobCancelTimeoutInMinutes": 1,
+              "condition": "succeeded()",
+              "overrideInputs": {}
+            },
+            "rank": 1,
+            "phaseType": 1,
+            "name": "Agent job",
+            "workflowTasks": [
+              {
+                "environment": {},
+                "taskId": "a8515ec8-7254-4ffd-912c-86772e2b5962",
+                "version": "3.*",
+                "name": "Replace tokens in deployment.template.json",
+                "refName": "",
+                "enabled": true,
+                "alwaysRun": false,
+                "continueOnError": false,
+                "timeoutInMinutes": 0,
+                "definitionType": "task",
+                "overrideInputs": {},
+                "condition": "succeeded()",
+                "inputs": {
+                  "rootDirectory": "$(System.DefaultWorkingDirectory)/$(Release.PrimaryArtifactSourceAlias)/drop/EdgeSolution",
+                  "targetFiles": "deployment.template.json",
+                  "encoding": "auto",
+                  "writeBOM": "true",
+                  "actionOnMissing": "warn",
+                  "keepToken": "false",
+                  "tokenPrefix": "#{",
+                  "tokenSuffix": "}#",
+                  "emptyValue": "(empty)",
+                  "escapeType": "none",
+                  "escapeChar": "",
+                  "charsToEscape": ""
+                }
+              },
+              {
+                "environment": {},
+                "taskId": "a8515ec8-7254-4ffd-912c-86772e2b5962",
+                "version": "3.*",
+                "name": "Replace tokens in modules/**/module.json",
+                "refName": "",
+                "enabled": true,
+                "alwaysRun": false,
+                "continueOnError": false,
+                "timeoutInMinutes": 0,
+                "definitionType": "task",
+                "overrideInputs": {},
+                "condition": "succeeded()",
+                "inputs": {
+                  "rootDirectory": "$(System.DefaultWorkingDirectory)/$(Release.PrimaryArtifactSourceAlias)/drop/EdgeSolution",
+                  "targetFiles": "modules/**/module.json",
+                  "encoding": "auto",
+                  "writeBOM": "true",
+                  "actionOnMissing": "warn",
+                  "keepToken": "false",
+                  "tokenPrefix": "#{",
+                  "tokenSuffix": "}#",
+                  "emptyValue": "(empty)",
+                  "escapeType": "none",
+                  "escapeChar": "",
+                  "charsToEscape": ""
+                }
+              },
+              {
+                "environment": {},
+                "taskId": "80f3f6a0-82a6-4a22-ba7a-e5b8c541b9b8",
+                "version": "1.*",
+                "name": "Azure IoT Edge - Build and Push modules",
+                "refName": "",
+                "enabled": true,
+                "alwaysRun": false,
+                "continueOnError": false,
+                "timeoutInMinutes": 0,
+                "definitionType": "task",
+                "overrideInputs": {},
+                "condition": "succeeded()",
+                "inputs": {
+                  "action": "Build and Push modules",
+                  "connectedServiceNameARM": "",
+                  "iothubname": "",
+                  "deploymentid": "",
+                  "priority": "0",
+                  "deviceOption": "",
+                  "deviceId": "",
+                  "targetcondition": "",
+                  "moduleJsons": "modules/**/module.json",
+                  "containerregistrytype": "Azure Container Registry",
+                  "nugetFeed": "",
+                  "dockerRegistryEndpoint": "",
+                  "azureSubscriptionEndpoint": "",
+                  "azureContainerRegistry": "",
+                  "dockerHostEndpoint": "",
+                  "rootPath": "$(System.DefaultWorkingDirectory)/$(Release.PrimaryArtifactSourceAlias)/drop/EdgeSolution"
+                }
+              },
+              {
+                "environment": {},
+                "taskId": "80f3f6a0-82a6-4a22-ba7a-e5b8c541b9b8",
+                "version": "1.*",
+                "name": "Azure IoT Edge - Deploy to IoT Edge devices",
+                "refName": "",
+                "enabled": true,
+                "alwaysRun": false,
+                "continueOnError": false,
+                "timeoutInMinutes": 0,
+                "definitionType": "task",
+                "overrideInputs": {},
+                "condition": "succeeded()",
+                "inputs": {
+                  "action": "Deploy to IoT Edge devices",
+                  "connectedServiceNameARM": "",
+                  "iothubname": "$(iothub_name)",
+                  "deploymentid": "$(deployment_name)",
+                  "priority": "0",
+                  "deviceOption": "Multiple Devices",
+                  "deviceId": "",
+                  "targetcondition": "tags.environment='qa'",
+                  "moduleJsons": "**/module.json",
+                  "containerregistrytype": "Azure Container Registry",
+                  "nugetFeed": "",
+                  "dockerRegistryEndpoint": "",
+                  "azureSubscriptionEndpoint": "",
+                  "azureContainerRegistry": "",
+                  "dockerHostEndpoint": "",
+                  "rootPath": "$(System.DefaultWorkingDirectory)/$(Release.PrimaryArtifactSourceAlias)/drop/EdgeSolution"
+                }
+              }
+            ]
+          }
+        ],
+        "environmentOptions": {
+          "emailNotificationType": "OnlyOnFailure",
+          "emailRecipients": "release.environment.owner;release.creator",
+          "skipArtifactsDownload": false,
+          "timeoutInMinutes": 0,
+          "enableAccessToken": false,
+          "publishDeploymentStatus": true,
+          "badgeEnabled": false,
+          "autoLinkWorkItems": false,
+          "pullRequestDeploymentEnabled": false
+        },
+        "demands": [],
+        "conditions": [
+          { "name": "ReleaseStarted", "conditionType": 1, "value": "" }
+        ],
+        "executionPolicy": { "concurrencyCount": 1, "queueDepthCount": 0 },
+        "schedules": [],
+        "currentRelease": {
+          "id": 0,
+          "url": "https://pdecarlo.vsrm.visualstudio.com/fa573b71-baff-441a-91df-81901a3185c0/_apis/Release/releases/0",
+          "_links": {}
+        },
+        "retentionPolicy": {
+          "daysToKeep": 30,
+          "releasesToKeep": 3,
+          "retainBuild": true
+        },
+        "processParameters": {},
+        "properties": {},
+        "preDeploymentGates": { "id": 0, "gatesOptions": null, "gates": [] },
+        "postDeploymentGates": { "id": 0, "gatesOptions": null, "gates": [] },
+        "environmentTriggers": [],
+        "badgeUrl": "https://pdecarlo.vsrm.visualstudio.com/_apis/public/Release/badge/fa573b71-baff-441a-91df-81901a3185c0/2/4"
+      },
+      {
+        "id": 5,
+        "name": "Smoke Test",
+        "rank": 2,
+        "owner": {
+          "displayName": "Paul DeCarlo",
+          "url": "https://app.vssps.visualstudio.com/A3dbf67ab-a3a2-46ad-af19-f48a3a5dc7ea/_apis/Identities/902cbc8b-027c-44d2-ad50-8e629d991fef",
+          "_links": {
+            "avatar": {
+              "href": "https://pdecarlo.visualstudio.com/_apis/GraphProfile/MemberAvatars/aad.ZDBlMTUxNTYtYWNmYS03N2Y4LWFkZDItYzRkMDYzODMyYjUz"
+            }
+          },
+          "id": "902cbc8b-027c-44d2-ad50-8e629d991fef",
+          "uniqueName": "pdecarlo@microsoft.com",
+          "imageUrl": "https://pdecarlo.visualstudio.com/_api/_common/identityImage?id=902cbc8b-027c-44d2-ad50-8e629d991fef",
+          "descriptor": "aad.ZDBlMTUxNTYtYWNmYS03N2Y4LWFkZDItYzRkMDYzODMyYjUz"
+        },
+        "variables": {},
+        "variableGroups": [],
+        "preDeployApprovals": {
+          "approvals": [
+            {
+              "rank": 1,
+              "isAutomated": true,
+              "isNotificationOn": false,
+              "id": 11
+            }
+          ],
+          "approvalOptions": {
+            "requiredApproverCount": null,
+            "releaseCreatorCanBeApprover": true,
+            "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+            "enforceIdentityRevalidation": false,
+            "timeoutInMinutes": 0,
+            "executionOrder": 1
+          }
+        },
+        "deployStep": { "id": 12 },
+        "postDeployApprovals": {
+          "approvals": [
+            {
+              "rank": 1,
+              "isAutomated": true,
+              "isNotificationOn": false,
+              "id": 15
+            }
+          ],
+          "approvalOptions": {
+            "requiredApproverCount": null,
+            "releaseCreatorCanBeApprover": true,
+            "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+            "enforceIdentityRevalidation": false,
+            "timeoutInMinutes": 0,
+            "executionOrder": 2
+          }
+        },
+        "deployPhases": [
+          {
+            "deploymentInput": {
+              "parallelExecution": { "parallelExecutionType": "none" },
+              "skipArtifactsDownload": false,
+              "artifactsDownloadInput": {
+                "downloadInputs": [
+                  {
+                    "artifactItems": [],
+                    "alias": "_IoTEdge-DevOps-CI",
+                    "artifactType": "Build",
+                    "artifactDownloadMode": "All"
+                  }
+                ]
+              },
+              "queueId": 10,
+              "demands": [],
+              "enableAccessToken": false,
+              "timeoutInMinutes": 0,
+              "jobCancelTimeoutInMinutes": 1,
+              "condition": "succeeded()",
+              "overrideInputs": {}
+            },
+            "rank": 1,
+            "phaseType": 1,
+            "name": "Agent job",
+            "workflowTasks": [
+              {
+                "environment": {},
+                "taskId": "46e4be58-730b-4389-8a2f-ea10b3e5e815",
+                "version": "1.*",
+                "name": "Remove all registered QA devices",
+                "refName": "",
+                "enabled": true,
+                "alwaysRun": false,
+                "continueOnError": false,
+                "timeoutInMinutes": 0,
+                "definitionType": "task",
+                "overrideInputs": {},
+                "condition": "succeeded()",
+                "inputs": {
+                  "connectedServiceNameARM": "",
+                  "scriptLocation": "scriptPath",
+                  "scriptPath": "$(System.DefaultWorkingDirectory)/$(Release.PrimaryArtifactSourceAlias)/drop/scripts/edgeRemoveQADevices.sh",
+                  "inlineScript": "",
+                  "args": "$(iothub_name) $(environment)",
+                  "cwd": "",
+                  "failOnStandardError": "false"
+                }
+              },
+              {
+                "environment": {},
+                "taskId": "e28912f1-0114-4464-802a-a3a35437fd16",
+                "version": "1.*",
+                "name": "Run an azure-iot-edge-device-container instance",
+                "refName": "",
+                "enabled": true,
+                "alwaysRun": false,
+                "continueOnError": false,
+                "timeoutInMinutes": 0,
+                "definitionType": "task",
+                "overrideInputs": {},
+                "condition": "succeeded()",
+                "inputs": {
+                  "containerregistrytype": "Container Registry",
+                  "dockerRegistryEndpoint": "",
+                  "azureSubscriptionEndpoint": "",
+                  "azureContainerRegistry": "",
+                  "command": "Run an image",
+                  "dockerFile": "**/Dockerfile",
+                  "arguments": "",
+                  "useDefaultContext": "true",
+                  "buildContext": "",
+                  "pushMultipleImages": "false",
+                  "tagMultipleImages": "false",
+                  "imageName": "toolboc/azure-iot-edge-device-container",
+                  "imageNamesPath": "",
+                  "qualifyImageName": "true",
+                  "includeSourceTags": "false",
+                  "includeLatestTag": "false",
+                  "addDefaultLabels": "true",
+                  "imageDigestFile": "",
+                  "containerName": "qa-test",
+                  "ports": "",
+                  "volumes": "/var/run/docker.sock:/var/run/docker.sock",
+                  "envVars": "spAppUrl=$(spAppUrl)\nspPassword=$(spPassword)\ntenantId=$(tenantId)\nsubscriptionId=$(subscriptionId)\niothub_name=$(iothub_name)\nenvironment=$(environment)",
+                  "workingDirectory": "",
+                  "entrypointOverride": "",
+                  "containerCommand": "",
+                  "runInBackground": "true",
+                  "restartPolicy": "no",
+                  "maxRestartRetries": "",
+                  "dockerHostEndpoint": "",
+                  "enforceDockerNamingConvention": "true",
+                  "memoryLimit": ""
+                }
+              },
+              {
+                "environment": {},
+                "taskId": "6c731c3c-3c68-459a-a5c9-bde6e6595b5b",
+                "version": "3.*",
+                "name": "Sleep for 30 seconds to allow device to register",
+                "refName": "",
+                "enabled": true,
+                "alwaysRun": false,
+                "continueOnError": false,
+                "timeoutInMinutes": 1,
+                "definitionType": "task",
+                "overrideInputs": {},
+                "condition": "succeeded()",
+                "inputs": {
+                  "targetType": "inline",
+                  "filePath": "",
+                  "arguments": "",
+                  "script": "# Write your commands here\n\n# Use the environment variables input below to pass secret variables to this script\n\nsleep 30",
+                  "workingDirectory": "",
+                  "failOnStderr": "false"
+                }
+              },
+              {
+                "environment": {},
+                "taskId": "46e4be58-730b-4389-8a2f-ea10b3e5e815",
+                "version": "1.*",
+                "name": "Smoke Test",
+                "refName": "",
+                "enabled": true,
+                "alwaysRun": false,
+                "continueOnError": false,
+                "timeoutInMinutes": 0,
+                "definitionType": "task",
+                "overrideInputs": {},
+                "condition": "succeeded()",
+                "inputs": {
+                  "connectedServiceNameARM": "",
+                  "scriptLocation": "scriptPath",
+                  "scriptPath": "$(System.DefaultWorkingDirectory)/$(Release.PrimaryArtifactSourceAlias)/drop/scripts/edgeSmokeTest.sh",
+                  "inlineScript": "",
+                  "args": "$(iothub_name) $(environment) $(deployment_name)",
+                  "cwd": "",
+                  "failOnStandardError": "false"
+                }
+              }
+            ]
+          }
+        ],
+        "environmentOptions": {
+          "emailNotificationType": "OnlyOnFailure",
+          "emailRecipients": "release.environment.owner;release.creator",
+          "skipArtifactsDownload": false,
+          "timeoutInMinutes": 0,
+          "enableAccessToken": false,
+          "publishDeploymentStatus": true,
+          "badgeEnabled": false,
+          "autoLinkWorkItems": false,
+          "pullRequestDeploymentEnabled": false
+        },
+        "demands": [],
+        "conditions": [
+          { "name": "Create Deployment", "conditionType": 2, "value": "4" }
+        ],
+        "executionPolicy": { "concurrencyCount": 1, "queueDepthCount": 0 },
+        "schedules": [],
+        "currentRelease": {
+          "id": 0,
+          "url": "https://pdecarlo.vsrm.visualstudio.com/fa573b71-baff-441a-91df-81901a3185c0/_apis/Release/releases/0",
+          "_links": {}
+        },
+        "retentionPolicy": {
+          "daysToKeep": 30,
+          "releasesToKeep": 3,
+          "retainBuild": true
+        },
+        "processParameters": {
+          "dataSourceBindings": [
+            {
+              "parameters": {},
+              "endpointId": "$(azureSubscriptionEndpoint)",
+              "target": "kubernetesCluster",
+              "resultTemplate": "{{{name}}}",
+              "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+              "resultSelector": "jsonpath:$.value[*]"
+            },
+            {
+              "parameters": {},
+              "endpointId": "$(azureSubscriptionEndpoint)",
+              "target": "azureResourceGroup",
+              "resultTemplate": "{{{ #extractResource id resourcegroups}}}",
+              "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+              "resultSelector": "jsonpath:$.value[*]"
+            }
+          ]
+        },
+        "properties": {},
+        "preDeploymentGates": { "id": 0, "gatesOptions": null, "gates": [] },
+        "postDeploymentGates": { "id": 0, "gatesOptions": null, "gates": [] },
+        "environmentTriggers": [],
+        "badgeUrl": "https://pdecarlo.vsrm.visualstudio.com/_apis/public/Release/badge/fa573b71-baff-441a-91df-81901a3185c0/2/5"
+      }
+    ],
+    "artifacts": [
+      {
+        "sourceId": "fa573b71-baff-441a-91df-81901a3185c0:1",
+        "type": "Build",
+        "alias": "_IoTEdge-DevOps-CI",
+        "definitionReference": {
+          "artifactSourceDefinitionUrl": {
+            "id": "https://pdecarlo.visualstudio.com/_permalink/_build/index?collectionId=9db7227f-3820-44ea-a7f0-f7873b813eca&projectId=fa573b71-baff-441a-91df-81901a3185c0&definitionId=1",
+            "name": ""
+          },
+          "defaultVersionBranch": { "id": "", "name": "" },
+          "defaultVersionSpecific": { "id": "", "name": "" },
+          "defaultVersionTags": { "id": "", "name": "" },
+          "defaultVersionType": { "id": "latestType", "name": "Latest" },
+          "definition": { "id": "1", "name": "IoTEdge-DevOps-CI" },
+          "project": {
+            "id": "fa573b71-baff-441a-91df-81901a3185c0",
+            "name": "IoTEdge-DevOps"
+          }
+        },
+        "isPrimary": true,
+        "isRetained": false
+      }
+    ],
+    "triggers": [],
+    "releaseNameFormat": "Release-$(rev:r)",
+    "tags": [],
+    "properties": {
+      "DefinitionCreationSource": {
+        "$type": "System.String",
+        "$value": "ReleaseClone"
+      }
+    },
+    "id": 2,
+    "name": "Release Pipeline",
+    "path": "\\",
+    "projectReference": null,
+    "url": "https://pdecarlo.vsrm.visualstudio.com/fa573b71-baff-441a-91df-81901a3185c0/_apis/Release/definitions/2",
+    "_links": {
+      "self": {
+        "href": "https://pdecarlo.vsrm.visualstudio.com/fa573b71-baff-441a-91df-81901a3185c0/_apis/Release/definitions/2"
+      },
+      "web": {
+        "href": "https://pdecarlo.visualstudio.com/fa573b71-baff-441a-91df-81901a3185c0/_release?definitionId=2"
+      }
+    }
+  }
+  
