@@ -4,14 +4,14 @@ A living repository of best practices and examples for developing [AzureIoT Edge
 
 ## Purpose
 
-The [Internet of Things](https://en.wikipedia.org/wiki/Internet_of_things) is a technology paradigm that involves the use of internet connected devices to publish data often in conjunction with real-time data processing, machine learning, and/or storage services.  Development of these systems can be enhanced through application of modern DevOps principles which include such tasks as automation, monitoring, and all steps of the software engineering process from development, testing, quality assurance, and release.  We will examine these concepts as they relate to feature offerings in [Visual Studio Team Services](https://visualstudio.microsoft.com/team-services/), [Application Insights](https://azure.microsoft.com/en-us/services/application-insights/), [Azure Container Registries](https://azure.microsoft.com/en-us/services/container-registry/), [Azure IoT Hub Device Provisioning Service](https://docs.microsoft.com/en-us/azure/iot-dps/), and [Azure IoT Hubs](https://azure.microsoft.com/en-us/services/iot-hub/).
+The [Internet of Things](https://en.wikipedia.org/wiki/Internet_of_things) is a technology paradigm that involves the use of internet connected devices to publish data often in conjunction with real-time data processing, machine learning, and/or storage services.  Development of these systems can be enhanced through application of modern DevOps principles which include such tasks as automation, monitoring, and all steps of the software engineering process from development, testing, quality assurance, and release.  We will examine these concepts as they relate to feature offerings in [Azure DevOps Services](https://azure.microsoft.com/en-us/services/devops/), [Application Insights](https://azure.microsoft.com/en-us/services/application-insights/), [Azure Container Registries](https://azure.microsoft.com/en-us/services/container-registry/), [Azure IoT Hub Device Provisioning Service](https://docs.microsoft.com/en-us/azure/iot-dps/), and [Azure IoT Hubs](https://azure.microsoft.com/en-us/services/iot-hub/).
 
 ## IoTEedge-DevOps Lab
 
-This Lab will walk through creating a Visual Studio Team Services project repo that employs [Continuous Integration](https://docs.microsoft.com/en-us/azure/devops/what-is-continuous-integration) and [Continuous Delivery](https://docs.microsoft.com/en-us/azure/devops/what-is-continuous-delivery) to publish an IoT Edge deployment to specific devices as part of a [build definition](https://docs.microsoft.com/en-us/cli/vsts/build/definition) and [release pipeline](https://docs.microsoft.com/en-us/vsts/pipelines/release/). 
+This Lab will walk through creating an Azure DevOps Services project repo that employs [Continuous Integration](https://docs.microsoft.com/en-us/azure/devops/what-is-continuous-integration) and [Continuous Delivery](https://docs.microsoft.com/en-us/azure/devops/what-is-continuous-delivery) to publish an IoT Edge deployment to specific devices as part of a [build definition](https://docs.microsoft.com/en-us/cli/vsts/build/definition) and [release pipeline](https://docs.microsoft.com/en-us/vsts/pipelines/release/). 
 
 * [Step 1: Creating Azure Resources](#step-1-creating-azure-resources)
-* [Step 2: Setup Visual Studio Team Services](#step-2-setup-visual-studio-team-services)
+* [Step 2: Setup Azure DevOps Services](#step-2-setup-azure-devops-services)
 * [Step 3: Setting up Continuous Integration](#step-3-setting-up-continuous-integration)
 * [Step 4: Creating a release pipeline with a Smoke Test](#step-4-creating-a-release-pipeline-with-a-smoke-test)
 * [Step 5: Adding a scalable integration test to a release pipeline ](#step-5-adding-a-scalable-integration-test-to-a-release-pipeline )
@@ -40,11 +40,11 @@ On the resulting screen, supply a globally unique value for the `Resource Name S
 
 If you encounter any issues in the deployment, it is advised to delete the created Resource Group (if any) and retry with a new value for the `Resource Name Suffix` parameter.
 
-### Step 2: Setup Visual Studio Team Services
+### Step 2: Setup Azure DevOps Services
 
-Visual Studio Team Services (VSTS) allows for building, testing, and deploying code in an easy to manage interface.  We will build out a base for IoT Edge DevOps practices using services provided in VSTS.
+Azure DevOps Services allows for building, testing, and deploying code in an easy to manage interface.  We will build out a base for IoT Edge DevOps practices using services provided by Azure DevOps Services.
 
-If you have not already, create a new Visual Studio Team Services account [here](https://go.microsoft.com/fwlink/?LinkId=307137&clcid=0x409&wt.mc_id=o~msft~vscom~product-vsts-hero~464&campaign=o~msft~vscom~product-vsts-hero~464)
+If you have not already, create a new Azure DevOps Services account [here](https://azure.microsoft.com/en-us/services/devops/)
 
 Next, create a new project and give it a descriptive name:
 
@@ -54,25 +54,25 @@ Next, select `Code` then click the `import` button underneath "import a reposito
 
     https://github.com/toolboc/IoTEdge-DevOps.git
 
-![Import GH to VSTS](/content/ImportGHtoVSTS.PNG)
+![Import GH to Azure DevOps](/content/ImportGHtoVSTS.PNG)
 
-The import process should begin importing this repository into your VSTS project. 
+The import process should begin importing this repository into your Azure DevOps project. 
 
 ### Step 3: Setting up Continuous Integration
 
-This repository contains a VSTS build definition which is preconfigured to build the included EdgeSolution in [.vsts-ci.yml](/.vsts-ci.yml).  This build definition relies on two external plugins ([Replace Tokens](https://marketplace.visualstudio.com/items?itemName=qetza.replacetokens) and [Azure IoT Edge For VSTS](https://marketplace.visualstudio.com/items?itemName=vsc-iot.iot-edge-build-deploy)).  
+This repository contains a VSTS build definition which is preconfigured to build the included EdgeSolution in [.vsts-ci.yml](/.vsts-ci.yml).  This build definition relies on two external plugins ([Replace Tokens](https://marketplace.visualstudio.com/items?itemName=qetza.replacetokens) and [Azure IoT Edge For Azure DevOps](https://marketplace.visualstudio.com/items?itemName=vsc-iot.iot-edge-build-deploy)).  
 
-Begin by installing the **Replace Tokens** task from the Visual Studio Marketplace by visiting this [link](https://marketplace.visualstudio.com/items?itemName=qetza.replacetoken) and clicking the "Get it free" button, then install into the organization which contains your newly created VSTS project.
+Begin by installing the **Replace Tokens** task from the Visual Studio Marketplace by visiting this [link](https://marketplace.visualstudio.com/items?itemName=qetza.replacetoken) and clicking the "Get it free" button, then install into the organization which contains your newly created Azure DevOps project.
 
-Similarly, install the **Azure IoT Edge For VSTS** task from the Visual Studio Marketplace by visiting this [link](https://marketplace.visualstudio.com/items?itemName=vsc-iot.iot-edge-build-deploy) and clicking the "Get it free" button, then install into the organization which contains your newly created VSTS project.
+Similarly, install the **Azure IoT Edge For Azure DevOps** task from the Visual Studio Marketplace by visiting this [link](https://marketplace.visualstudio.com/items?itemName=vsc-iot.iot-edge-build-deploy) and clicking the "Get it free" button, then install into the organization which contains your newly created Azure DevOps project.
 
-Once these tasks are successfully installed, return to the VSTS project and select "Code" then edit the `.vsts-ci.yml` file:
+Once these tasks are successfully installed, return to the Azure DevOps project and select "Code" then edit the `.vsts-ci.yml` file:
 
 ![Edit Build Definition](/content/EditBuildDefVSTS.PNG)
 
-Add the following comment to the top of the file a shown below:
+Add the following comment to the top of the file as shown below:
 
-    # This repository is built using VSTS.
+    # This repository is built using Azure DevOps.
 
 ![Update Build Definition](/content/UpdateBuildDefVSTS.PNG)
 
@@ -80,7 +80,7 @@ Now select "Build" and you should see that a build has kicked off upon editing t
 
 ![Created Build Definition](/content/BuildDefCreated.PNG)
 
-The build will fail, this is to be expected as VSTS will create the build definition with a name that contains spaces which causes a conflict in the "Azure IoT Edge - Build modules" task.
+The build will fail, this is to be expected as Azure DevOps will create the build definition with a name that contains spaces which causes a conflict in the "Azure IoT Edge - Build modules" task.
 
 To fix this, select "Build and release" => "Builds" then edit the newly created build definition so that it does not contain spaces:
 
@@ -153,7 +153,7 @@ To fix the Agent Pools, select "Tasks" => "Create Deployment" => "Agent Job" and
 
 ![Fix Agent Pool 2](/content/AgentPool2.PNG)
 
-With these fixes applied, you should be able to save the Release pipeline.  It is highly recommended to save at this point if VSTS allows.
+With these fixes applied, you should be able to save the Release pipeline.  It is highly recommended to save at this point if Azure DevOps allows.
 
 To fix the variables, select "Variables":
 
