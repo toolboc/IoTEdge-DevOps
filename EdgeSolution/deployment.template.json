@@ -56,6 +56,16 @@
               "createOptions": ""
             }
           },
+          "IoTEdgeBogusDataGenerator": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "toolboc/azure-iot-edge-bogus-data-generator",
+              "createOptions": "{}"
+            }
+          },
           "dockerappinsights": {
             "version": "1.0",
             "type": "docker",
@@ -74,7 +84,8 @@
         "schemaVersion": "1.0",
         "routes": {
           "SampleModuleToIoTHub": "FROM /messages/modules/SampleModule/outputs/* INTO $upstream",
-          "sensorToSampleModule": "FROM /messages/modules/tempSensor/outputs/temperatureOutput INTO BrokeredEndpoint(\"/modules/SampleModule/inputs/input1\")"
+          "sensorToSampleModule": "FROM /messages/modules/tempSensor/outputs/temperatureOutput INTO BrokeredEndpoint(\"/modules/SampleModule/inputs/input1\")",
+          "IoTEdgeBogusDataGeneratorToIoTHub": "FROM /messages/modules/IoTEdgeBogusDataGenerator/outputs/* INTO $upstream"
         },
         "storeAndForwardConfiguration": {
           "timeToLiveSecs": 7200
