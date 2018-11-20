@@ -11,6 +11,15 @@ usage(){
 }
 
 startTest(){
+
+az_iot_ext_install_status=$(az extension show --name azure-cli-iot-ext)
+az_iot_ext_install_status_len=${#az_iot_ext_install_status}
+
+if [ $az_iot_ext_install_status_len -eq 0 ]
+then
+    az extension add --name azure-cli-iot-ext
+fi
+
 qaDevices=($(az iot hub query --hub-name $iothub_name --query-command "SELECT * FROM devices WHERE tags.environment = '$environment'" | jq -r .[].deviceId))
 
 if [ ${#qaDevices[*]} -eq 0 ]
