@@ -32,7 +32,7 @@ steps:
 
       targetFiles: "modules/**/module.json"
 
-  - task: vsc-iot.iot-edge-build-deploy.custom-build-release-task.edge-cicd-task@1
+  - task: vsc-iot.iot-edge-build-deploy.custom-build-release-task.AzureIoTEdge@1
 
     displayName: "Azure IoT Edge - Build modules"
 
