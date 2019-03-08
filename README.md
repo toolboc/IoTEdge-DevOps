@@ -4,7 +4,7 @@ A living repository of best practices and examples for developing [AzureIoT Edge
 
 ## Purpose
 
-The [Internet of Things](https://en.wikipedia.org/wiki/Internet_of_things) is a technology paradigm that involves the use of internet connected devices to publish data often in conjunction with real-time data processing, machine learning, and/or storage services.  Development of these systems can be enhanced through application of modern DevOps principles which include such tasks as automation, monitoring, and all steps of the software engineering process from development, testing, quality assurance, and release.  We will examine these concepts as they relate to feature offerings in [Azure DevOps Services](https://azure.microsoft.com/en-us/services/devops/), [Application Insights](https://azure.microsoft.com/en-us/services/application-insights/), [Azure Container Registries](https://azure.microsoft.com/en-us/services/container-registry/), [Azure IoT Hub Device Provisioning Service](https://docs.microsoft.com/en-us/azure/iot-dps/), and [Azure IoT Hubs](https://azure.microsoft.com/en-us/services/iot-hub/).
+The [Internet of Things](https://en.wikipedia.org/wiki/Internet_of_things) is a technology paradigm that involves the use of internet connected devices to publish data often in conjunction with real-time data processing, machine learning, and/or storage services.  Development of these systems can be enhanced through application of modern DevOps principles which include such tasks as automation, monitoring, and all steps of the software engineering process from development, testing, quality assurance, and release.  We will examine these concepts as they relate to feature offerings in [Azure DevOps Services](https://azure.microsoft.com/en-us/services/devops?wt.mc_id=iotedgedevops-github-pdecarlo), [Application Insights](https://azure.microsoft.com/en-us/services/application-insights?wt.mc_id=iotedgedevops-github-pdecarlo), [Azure Container Registries](https://azure.microsoft.com/en-us/services/container-registry?wt.mc_id=iotedgedevops-github-pdecarlo), [Azure IoT Hub Device Provisioning Service](https://docs.microsoft.com/en-us/azure/iot-dps?wt.mc_id=iotedgedevops-github-pdecarlo), and [Azure IoT Hubs](https://azure.microsoft.com/en-us/services/iot-hub?wt.mc_id=iotedgedevops-github-pdecarlo).
 
 ## IoTEedge-DevOps Lab
 
@@ -23,10 +23,10 @@ To get started, we will need to create a few cloud services that will be used in
 
 | Service | Description |
 | -------------- | ------------|
-| [Application Insights](https://azure.microsoft.com/en-us/services/application-insights/) | Used to monitor performance metrics of Docker Host and IoT Edge Modules |
-| [Azure Container Registries](https://azure.microsoft.com/en-us/services/container-registry/) | A private docker registry service used to store published IoT Edge Modules |
-| [Azure IoT Hub Device Provisioning Service](https://docs.microsoft.com/en-us/azure/iot-dps/) | Allows for automatic provisioning of IoT Devices in a secure and scalable manner |
-| [Azure IoT Hubs](https://azure.microsoft.com/en-us/services/iot-hub/) | Service which enables us to securely connect, monitor, and manage IoT devices. 
+| [Application Insights](https://azure.microsoft.com/en-us/services/application-insights?wt.mc_id=iotedgedevops-github-pdecarlo) | Used to monitor performance metrics of Docker Host and IoT Edge Modules |
+| [Azure Container Registries](https://azure.microsoft.com/en-us/services/container-registry?wt.mc_id=iotedgedevops-github-pdecarlo) | A private docker registry service used to store published IoT Edge Modules |
+| [Azure IoT Hub Device Provisioning Service](https://docs.microsoft.com/en-us/azure/iot-dps?wt.mc_id=iotedgedevops-github-pdecarlo) | Allows for automatic provisioning of IoT Devices in a secure and scalable manner |
+| [Azure IoT Hubs](https://azure.microsoft.com/en-us/services/iot-hub?wt.mc_id=iotedgedevops-github-pdecarlo) | Service which enables us to securely connect, monitor, and manage IoT devices. 
 
 If you have already deployed any of these services into an existing environment, you are welcome to reuse them in the lab, however, it is highly suggested to create brand new services to avoid issues.  
 
@@ -44,7 +44,7 @@ If you encounter any issues in the deployment, it is advised to delete the creat
 
 Azure DevOps Services allows for building, testing, and deploying code in an easy to manage interface.  We will build out a base for IoT Edge DevOps practices using services provided by Azure DevOps Services.
 
-If you have not already, create a new Azure DevOps Services account [here](https://azure.microsoft.com/en-us/services/devops/)
+If you have not already, create a new Azure DevOps Services account [here](https://azure.microsoft.com/en-us/services/devops?wt.mc_id=iotedgedevops-github-pdecarlo)
 
 Next, create a new project and give it a descriptive name:
 
@@ -62,9 +62,9 @@ The import process should begin importing this repository into your Azure DevOps
 
 This repository contains a VSTS build definition which is preconfigured to build the included EdgeSolution in [.vsts-ci.yml](/.vsts-ci.yml).  This build definition relies on two external plugins ([Replace Tokens](https://marketplace.visualstudio.com/items?itemName=qetza.replacetokens) and [Azure IoT Edge For Azure DevOps](https://marketplace.visualstudio.com/items?itemName=vsc-iot.iot-edge-build-deploy)).  
 
-Begin by installing the **Replace Tokens** task from the Visual Studio Marketplace by visiting this [link](https://marketplace.visualstudio.com/items?itemName=qetza.replacetoken) and clicking the "Get it free" button, then install into the organization which contains your newly created Azure DevOps project.
+Begin by installing the **Replace Tokens** task from the Visual Studio Marketplace by visiting this [link](https://marketplace.visualstudio.com/items?itemName=qetza.replacetoken&wt.mc_id=iotedgedevops-github-pdecarlo) and clicking the "Get it free" button, then install into the organization which contains your newly created Azure DevOps project.
 
-Similarly, install the **Azure IoT Edge For Azure DevOps** task from the Visual Studio Marketplace by visiting this [link](https://marketplace.visualstudio.com/items?itemName=vsc-iot.iot-edge-build-deploy) and clicking the "Get it free" button, then install into the organization which contains your newly created Azure DevOps project.
+Similarly, install the **Azure IoT Edge For Azure DevOps** task from the Visual Studio Marketplace by visiting this [link](https://marketplace.visualstudio.com/items?itemName=vsc-iot.iot-edge-build-deploy&wt.mc_id=iotedgedevops-github-pdecarlo) and clicking the "Get it free" button, then install into the organization which contains your newly created Azure DevOps project.
 
 Once these tasks are successfully installed, return to the Azure DevOps project and select "Code" then edit the `.vsts-ci.yml` file:
 
@@ -168,7 +168,7 @@ For the additional variables, we need to create a service principal by performin
 
 Install the [Azure-Cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) 
 
-Run `az login` to sign in with the azure cli, then run `az account list` to see available subscirptions, and set the appropriate subscription with:
+Run `az login` to sign in with the azure cli, then run `az account list` to see available subscriptions, and set the appropriate subscription with:
 
     az account set --subscription <subscriptionid>
 
