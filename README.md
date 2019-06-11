@@ -50,7 +50,7 @@ Next, create a new project and give it a descriptive name:
 
 ![Create Project](/content/CreateProjectVSTS.PNG)
 
-Next, select `Code` then click the `import` button underneath "import a repository" and supply this url:
+Next, select `Repos` then click the `import` button underneath "import a repository" and supply this url:
 
     https://github.com/toolboc/IoTEdge-DevOps.git
 
@@ -60,13 +60,11 @@ The import process should begin importing this repository into your Azure DevOps
 
 ### Step 3: Setting up Continuous Integration
 
-This repository contains a VSTS build definition which is preconfigured to build the included EdgeSolution in [.vsts-ci.yml](/.vsts-ci.yml).  This build definition relies on two external plugins ([Replace Tokens](https://marketplace.visualstudio.com/items?itemName=qetza.replacetokens) and [Azure IoT Edge For Azure DevOps](https://marketplace.visualstudio.com/items?itemName=vsc-iot.iot-edge-build-deploy)).  
+This repository contains an Azure DevOps build definition which is preconfigured to build the included EdgeSolution in [.azure-pipelines.yml](/.azure-pipelines.yml).  This build definition relies on an external plugin ([Replace Tokens](https://marketplace.visualstudio.com/items?itemName=qetza.replacetokens).
 
 Begin by installing the **Replace Tokens** task from the Visual Studio Marketplace by visiting this [link](https://marketplace.visualstudio.com/items?itemName=qetza.replacetoken&wt.mc_id=iotedgedevops-github-pdecarlo) and clicking the "Get it free" button, then install into the organization which contains your newly created Azure DevOps project.
 
-Similarly, install the **Azure IoT Edge For Azure DevOps** task from the Visual Studio Marketplace by visiting this [link](https://marketplace.visualstudio.com/items?itemName=vsc-iot.iot-edge-build-deploy&wt.mc_id=iotedgedevops-github-pdecarlo) and clicking the "Get it free" button, then install into the organization which contains your newly created Azure DevOps project.
-
-Once these tasks are successfully installed, return to the Azure DevOps project and select "Code" then edit the `.vsts-ci.yml` file:
+Once this task is successfully installed, return to the Azure DevOps project and select "Repos => Files" then edit the `.azure-pipelines.yml` file:
 
 ![Edit Build Definition](/content/EditBuildDefVSTS.PNG)
 
@@ -80,9 +78,9 @@ Now select "Build" and you should see that a build has kicked off upon editing t
 
 ![Created Build Definition](/content/BuildDefCreated.PNG)
 
-The build will fail, this is to be expected as Azure DevOps will create the build definition with a name that contains spaces which causes a conflict in the "Azure IoT Edge - Build modules" task.
+The build will fail, this is to be expected as Azure DevOps will create the build definition with a name that contains spaces which causes a conflict in the "Azure IoT Edge - Build module images" task.
 
-To fix this, select "Build and release" => "Builds" then edit the newly created build definition so that it does not contain spaces:
+To fix this, select "Pipelines" => "Builds" then "Rename" the newly created build definition so that it does not contain spaces:
 
 ![Edit Build Definition Name](/content/EditBuildName.PNG)
 
@@ -97,9 +95,11 @@ Next, we need to obtain the Application Insights instrumentation key which will 
 
 Once you have obtained all of the necessary values, create a build definition variable for `acr.host`, `acr.user`, `acr.password`, and `appinsights.instrumentationkey` as shown below:
 
+![Edit Build Definition Variables](/content/EditBuildDefVars.PNG)
+
 ![Build Definition Variables](/content/BuildDefVars.PNG)
 
-Finally, select "Save & queue" and select "Hosted Linux Preview" for the Agent Pool, then click the "Save & queue" button:
+Finally, select "Save & queue", then click the "Save & queue" button:
 
 ![Queue Build Definition](/content/QueueBuildVSTS.PNG)
 
@@ -107,7 +107,7 @@ The build should complete successfully as shown below:
 
 ![Queue Build Definition](/content/BuildSuccessVSTS.PNG)
 
-With a successful build definition in place, we can now enforce continuous integration by applying a branch policy to the master branch.  Start by selecting "Code" => "Branches" then click the "..." on the row for the master branch and select "Branch policies".
+With a successful build definition in place, we can now enforce continuous integration by applying a branch policy to the master branch.  Start by selecting "Repos" => "Branches" then click the "..." on the row for the master branch and select "Branch policies".
 
 ![Select Branch Policy](/content/SelectBranchPolicyVSTS.PNG)
 
@@ -121,7 +121,7 @@ While this policy is enabled, all commits to feature branches will kick off an e
 
 Deployments to devices need to be done under tight control in production environments.  To achieve this, we will create a release pipeline which deploys to QA devices and smoke tests the edge runtime in a containerized device.  This is accomplished by running an instance of the [azure-iot-edge-device-container](https://github.com/toolboc/azure-iot-edge-device-container) which is configured as a QA device then probing the IoT Hub to ensure that QA device receives the desired deployment configuration and is able to successfully run all configured modules.  This test is contained in [edgeSmokeTest.sh](/scripts/edgeSmokeTest.sh)
 
-To begin, select "Build and release" => "Releases" then create a new pipeline with an empty job and save it:
+To begin, select "Pipelines" => "Releases" then create a new pipeline with an empty job and save it:
 
 ![Create Empty Job](/content/EmptyJobVSTS.PNG)
 
@@ -135,7 +135,7 @@ Download the [release-pipeline.json](/release-pipeline.json) file located in the
 
 There are a few things that we will need to fix before we can successfully run the Release Pipeline, specifically Azure Subscription endpoints, Agent Pools, and variable settings, and artifact source. 
 
-To fix the Azure Subscription Endpoints, select "Tasks" => "Create Deployment" and supply the appropriate Azure subscription and Azure Container Registry for the "Azure IoT Edge - Build and Push modules" and "Azure IoT Edge - Deploy to IoT Edge devices" tasks:
+To fix the Azure Subscription Endpoints, select "Tasks" => "Create Deployment" and supply the appropriate Azure subscription and Azure Container Registry for the "Azure IoT Edge - Push module images" and "Azure IoT Edge - Deploy to IoT Edge devices" tasks:
 
 ![Fix Endpoints 1](/content/FixAzureEndpoints1.PNG)
 
@@ -147,7 +147,7 @@ Next select Tasks" => "Smoke Test" and supply the appropriate Azure subscription
 
 ![Fix Endpoints 4](/content/FixAzureEndpoints4.PNG)
 
-To fix the Agent Pools, select "Tasks" => "Create Deployment" => "Agent Job" and change the Agent Pool to "Hosted Linux Preview:
+To fix the Agent Pools, select "Tasks" => "Create Deployment" => "Agent Job" and change the Agent Pool to "Hosted Ubuntu 1604":
 
 ![Fix Agent Pool 1](/content/AgentPool1.PNG)
 
@@ -197,15 +197,15 @@ Obtain the following Parameters and supply the appropriate values for the remain
 | tenantId   | The tenant id for the Service Principal | Required |
 | subscriptionId   | The azure subscription id where the IoT Hub is deployed | Required |
 
-To fix the artifact source, select "Pipeline" and delete the "_IoTEdge-DevOps-CI" artifact:
-
-![Delete Artifact](/content/DeleteArtifact.PNG)
-
-Next, add a new artifact that uses our CI build pipeline as a source:
+To fix the artifact source, select "Pipeline => Add an artifact":
 
 ![Add New Artifact](/content/AddNewArtifact.PNG)
 
-Once you have configured everything appropriately, select "Build and release" => "Releases" then select the newly created Release pipeline and "Create a release":
+Next, select your CI build pipeline as source and configure to obtain the latest version:
+
+![Add New Artifact](/content/AddNewArtifact2.PNG)
+
+Once you have configured everything appropriately, select "Save" then "Pipelines" => "Releases" then select the newly created Release pipeline and "Create a release":
 
 ![Create a Release](/content/CreateReleaseVSTS.PNG)
 

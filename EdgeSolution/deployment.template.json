@@ -72,7 +72,7 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-                "image": "microsoft/applicationinsights",
+                "image": "toolboc/applicationinsights",
                 "createOptions": "{\"HostConfig\":{\"Binds\":[\"/var/run/docker.sock:/docker.sock\"]},\"Mounts\":[{\"Type\":\"bind\",\"Source\":\"/var/run/docker.sock\",\"Destination\":\"/docker.sock\",\"Mode\":\"\",\"RW\":true,\"Propagation\":\"rprivate\"}],\"Cmd\":[\"ikey=#{appinsights.instrumentationkey}#\"]}"
             }
           }

@@ -1,0 +1,35 @@
+# IoT Edge CI Build Definition
+# Build your IoT Edge Modules in Azure DevOps
+# https://aka.ms/yaml
+
+pool:
+  name: Hosted Ubuntu 1604
+  
+steps:
+- task: CopyFiles@2
+  displayName: 'Copy unaltered source to: $(Build.ArtifactStagingDirectory)'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: '/**/*.*'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: qetza.replacetokens.replacetokens-task.replacetokens@3
+  displayName: 'Replace tokens in deployment.template.json'
+  inputs:
+    rootDirectory: EdgeSolution
+    targetFiles: deployment.template.json
+
+- task: qetza.replacetokens.replacetokens-task.replacetokens@3
+  displayName: 'Replace tokens in modules/**/module.json'
+  inputs:
+    rootDirectory: EdgeSolution
+    targetFiles: 'modules/**/module.json'
+
+- task: AzureIoTEdge@2
+  displayName: 'Azure IoT Edge - Build module images'
+  inputs:
+    deploymentid: 'azuredevops-deployment'
+    templateFilePath: EdgeSolution/deployment.template.json
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
