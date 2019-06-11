@@ -237,6 +237,14 @@ To fix this, select the stage name and configure the required settings:
 
 ![Helm Fix 3](/content/HelmFix3.PNG)
 
+Next, we will configure the Agent job to run on the "Hosted Ubuntu 1604" agent pool:
+
+![Helm Fix 4](/content/HelmFix4.PNG)
+
+Next, we will configure the "Helm init" task to upgrade / install tiller:
+
+![Helm Fix 5](/content/HelmFix5.PNG)
+
 Next, we will configure the "Helm upgrade" task to deploy the helm chart for the "azure-iot-edge-device-container".  Begin by adding a new "Bash" task right before the "Helm upgrade" task. Configure the type to "inline" and add the following:
 
     helm repo add azure-iot-edge-device-container https://toolboc.github.io/azure-iot-edge-device-container
