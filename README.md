@@ -60,9 +60,9 @@ The import process should begin importing this repository into your Azure DevOps
 
 ### Step 3: Setting up Continuous Integration
 
-This repository contains an Azure DevOps build definition which is preconfigured to build the included EdgeSolution in [.azure-pipelines.yml](/.azure-pipelines.yml).  This build definition relies on an external plugin ([Replace Tokens](https://marketplace.visualstudio.com/items?itemName=qetza.replacetokens).
+This repository contains an Azure DevOps build definition which is preconfigured to build the included EdgeSolution in [.azure-pipelines.yml](/.azure-pipelines.yml).  This build definition relies on an external plugin ([Replace Tokens](https://marketplace.visualstudio.com/items?itemName=qetza.replacetokens&wt.mc_id=iotedgedevops-github-pdecarlo)).
 
-Begin by installing the **Replace Tokens** task from the Visual Studio Marketplace by visiting this [link](https://marketplace.visualstudio.com/items?itemName=qetza.replacetoken&wt.mc_id=iotedgedevops-github-pdecarlo) and clicking the "Get it free" button, then install into the organization which contains your newly created Azure DevOps project.
+Begin by installing the **Replace Tokens** task from the Visual Studio Marketplace by visiting this [link](https://marketplace.visualstudio.com/items?itemName=qetza.replacetokens&wt.mc_id=iotedgedevops-github-pdecarlo) and clicking the "Get it free" button, then install into the organization which contains your newly created Azure DevOps project.
 
 Once this task is successfully installed, return to the Azure DevOps project and select "Repos => Files" then edit the `.azure-pipelines.yml` file:
 
