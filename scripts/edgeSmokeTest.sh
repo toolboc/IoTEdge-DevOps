@@ -57,12 +57,12 @@ usage(){
 
 startTest(){
 
-az_iot_ext_install_status=$(az extension show --name azure-cli-iot-ext)
+az_iot_ext_install_status=$(az extension show --name azure-iot)
 az_iot_ext_install_status_len=${#az_iot_ext_install_status}
 
 if [ $az_iot_ext_install_status_len -eq 0 ]
 then
-    az extension add --name azure-cli-iot-ext
+    az extension add --name azure-iot
 fi
 
 if [[ $singleDeviceTest != "false" ]]
