@@ -460,7 +460,7 @@
                 "targetType": "inline",
                 "filePath": "",
                 "arguments": "",
-                "script": "# Write your commands here\n\n# Use the environment variables input below to pass secret variables to this script\n\nsleep 30",
+                "script": "# Write your commands here\n\n# Use the environment variables input below to pass secret variables to this script\n\nsleep 30\ndocker ps -a\ndocker logs qa-test",
                 "workingDirectory": "",
                 "failOnStderr": "false",
                 "noProfile": "true",

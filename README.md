@@ -217,11 +217,11 @@ The new release pipeline should begin running:
 
 Integration testing is important for IoT Edge solutions which rely on services to accomplish desired functionality.  We will setup a scalable deployment of QA Devices using an Azure Kubernetes cluster.  This allows for an ability to deploy a theoretically limitless number of devices into an isolated environment for testing.  In addition, we will be able to monitor these devices using the dockerappinsights module which is configured in [deployment.template.json](/EdgeSolution/deployment.template.json). Completion of this step will require configuration of an Azure Kubernetes Service (AKS).
 
-You can deploy an AKS instance into your Azure Subscription by [creating an Azure Kubernetes Service cluster in the Azure Portal](https://docs.microsoft.com/azure/aks/kubernetes-walkthrough-portal?WT.mc_id=iot-0000-pdecarlo#create-an-aks-cluster).  It is important that you pay attention to the following configuration options during creation.  By default, this lab supports Kubernetes 1.15.x, you must ensure that you specify this during the configuration of your AKS instance.  In addition, you can save costs by reducing the Node Count to "1", this will deploy a single VM into your cluster and can be updated later if more resources are needed. Both of these options are highlighted below:
+You can deploy an AKS instance into your Azure Subscription by [creating an Azure Kubernetes Service cluster in the Azure Portal](https://docs.microsoft.com/azure/aks/kubernetes-walkthrough-portal?WT.mc_id=iot-0000-pdecarlo#create-an-aks-cluster).  It is important that you pay attention to the following configuration options during creation.  By default, this lab supports Kubernetes 1.18.14, you must ensure that you specify this during the configuration of your AKS instance.  In addition, you can save costs by reducing the Node Count to "1", this will deploy a single VM into your cluster and can be updated later if more resources are needed. Both of these options are highlighted below:
 
-![Set K8s version to 1.15.x](/content/AKS1.PNG)
+![Set K8s version to 1.18.14](/content/AKS1.PNG)
 
-In addition, to make deployment and configuration a bit easier, we will disable Role Based Access Control (RBAC).  This is not advised in production, but for the purposes of this lab it will greatly reduce the surface area for error.  You must ensure that you specify this during the configuration of your AKS deployment as shown below:
+In addition, to make deployment and configuration a bit easier, we will disable Role Based Access Control (RBAC).  This is not advised in production, but for the purposes of this lab it will greatly reduce the surface area for error. We also advise that you select "Service Principal" as your authentication method. You must ensure that you specify this during the configuration of your AKS deployment as shown below:
 
 ![Disable RBAC](/content/AKS2.PNG)
 
@@ -239,27 +239,23 @@ Rename this stage to "Integration":
 
 ![Add Integration Step](/content/AddIntegrationStep.PNG)
 
-An "Install Helm 2.9.1" task will be created, to reduce surface area for error, this should not be modified.
+First, we will modify the top-level parameters for this stage by selecting "Integration" at the top and supplying the appropriate values for the "Azure Subscription", "Resource group", and "Kubernetes cluster". These should be the values that were used when deploying your Kubernetes cluster:
 
-You will also notice that the "Helm init" and "Helm upgrade" tasks require some additional configuration:
-
-![Helm Fix 1](/content/HelmFix1.PNG)
-
-![Helm Fix 2](/content/HelmFix2.PNG)
-
-To fix this, select the stage name and configure the required settings:
-
-![Helm Fix 3](/content/HelmFix3.PNG)
+![Integration Parameters](/content/IntegrationParameters.PNG)
 
 Next, we will configure the Agent job to run on the "Hosted Ubuntu 1604" agent pool:
 
-![Helm Fix 4](/content/HelmFix4.PNG)
+![Configure Agent](/content/ConfigureAgent.PNG)
 
-Next, we will configure the "Helm init" task to upgrade / install tiller:
+You should notice an "Install Helm 2.9.1" task has been created, we will modify this to instead install Helm 3.5.2:
 
-![Helm Fix 5](/content/HelmFix5.PNG)
+![Helm Fix 1](/content/HelmFix1.PNG)
 
-Next, we will configure the "Helm upgrade" task to deploy the helm chart for the "azure-iot-edge-device-container".  Begin by adding a new "Bash" task right before the "Helm upgrade" task. Configure the type to "inline" and add the following:
+You will also notice that the "Helm init" and "Helm upgrade" tasks require some additional configuration.  [Helm version 3 and above no longer requires "Helm init"](https://helm.sh/blog/helm-v3-beta/) so we will remove this task.
+
+![Helm Fix 2](/content/HelmFix2.PNG)
+
+Next, we will create a new task to add the helm chart for the "azure-iot-edge-device-container".  Begin by adding a new "Bash" task right before the "Helm upgrade" task. Configure the type to "inline" and add the following:
 
     helm repo add azure-iot-edge-device-container https://toolboc.github.io/azure-iot-edge-device-container
     helm repo list
@@ -267,21 +263,29 @@ Next, we will configure the "Helm upgrade" task to deploy the helm chart for the
 
 ![Add Helm Chart](/content/AddHelmChart.PNG)
 
+Next, we want to ensure that our helm deployment does not recycle existing pods on consecutive runs, and instead deploys brand new instances of the "azure-iot-edge-device-container" for testing.  Add a new "kubectl" task, then modify the "Service Connection Type" to "Azure Resource Manager", select the Azure subscription that contains your Kubernetes Cluster, then choose the resource group and name of your cluster as shown:
+
+![Kubectl Config part 1](/content/Kubectl1.PNG)
+
+In this same section, scroll down and modify the namespace to "iot-edge-qa", set the command to "delete , and set arguments field to "pods --all" as shown:
+
+![Kubectl Config part 1](/content/Kubectl2.PNG)
+
 Next, we will configure the Helm Upgrade task.  Set the Namespace value to "iot-edge-qa", set the Command to "upgrade", set Chart Type to "Name", set the Chart Name to "azure-iot-edge-device-container/azure-iot-edge-device-container", set the Release Name to "iot-edge-qa", set Set Values to:
 
     spAppUrl=$(spAppUrl),spPassword=$(spPassword),tenantId=$(tenantId),subscriptionId=$(subscriptionId),iothub_name=$(iothub_name),environment=$(environment),replicaCount=2 
 
-and ensure that "Install if release not present", "Recreate Pods", "Force", and "Wait" checkboxes are checked as shown below:
+and ensure that "Install if release not present", and "Wait" checkboxes are checked as shown below:
 
 ![Configure Helm Upgrade](/content/HelmUpgrade.PNG)
 
-Start a new release and when complete, view  your AKS cluster Dashboard with:
+Start a new release and when complete, navigate  your AKS service within the Azure Portal, then select Namespaces:
 
-    az aks browse --resource-group <kube-cluster-resource-group> --name <kube-cluster-name>
+![Azure K8s Namespaces](/content/azureK8sNamespaces.PNG)
 
-![k8s Dashboard](/content/k8sDash.PNG)
+You will notice that the iot-edge-qa deployment has been deployed to the cluster.  To view the individual pods, you can select "Workloads" where you should see that two instances have been deployed:
 
-You will notice that QA devices have been deployed to the cluster.
+![Azure K8s Workloads](/content/azureK8sWorkloads.PNG)
 
 ### Step 6: Monitoring devices with App Insights
 
