@@ -275,7 +275,7 @@ Next, we will configure the Helm Upgrade task.  Set the Namespace value to "iot-
 
     spAppUrl=$(spAppUrl),spPassword=$(spPassword),tenantId=$(tenantId),subscriptionId=$(subscriptionId),iothub_name=$(iothub_name),environment=$(environment),replicaCount=2 
 
-and ensure that "Install if release not present", and "Wait" checkboxes are checked as shown below:
+Finally, ensure that "Install if release not present", and "Wait" checkboxes are checked and set Argument to "--create-namepace" as shown below:
 
 ![Configure Helm Upgrade](/content/HelmUpgrade.PNG)
 
