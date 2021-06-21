@@ -32,7 +32,7 @@ If you have already deployed any of these services into an existing environment,
 
 Deploy the required services by clicking 'Deploy to Azure' button below:
 
-[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
+[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Ftoolboc%2FIoTEdge-DevOps%2Fmaster%2Fazuredeploy.json)
 
 On the resulting screen, supply a globally unique value for the `Resource Name Suffix` parameter:
 
