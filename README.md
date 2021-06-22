@@ -71,19 +71,15 @@ Add the following comment to the top of the file as shown below:
 
     # This repository is built using Azure DevOps.
 
-![Update Build Definition](/content/UpdateBuildDefVSTS.PNG)
+Commit the changes as shown:
 
-Now select "Build" and you should see that a build has kicked off upon editing the Build Definition:
+![Commit Build Definition](/content/CommitBuildDefVSTS.PNG)
+
+Navigate back to "Repos" and select "Set up build" then select "Run" and you should see that a build has kicked off upon editing the Build Definition:
 
 ![Created Build Definition](/content/BuildDefCreated.PNG)
 
-The build will fail, this is to be expected as Azure DevOps will create the build definition with a name that contains spaces which causes a conflict in the "Azure IoT Edge - Build module images" task.
-
-To fix this, select "Pipelines" => "Builds" then "Rename" the newly created build definition so that it does not contain spaces:
-
-![Edit Build Definition Name](/content/EditBuildName.PNG)
-
-Next, we need to add a few build variables in order for the build to run successfully.  We will need to obtain the hostname of the Azure Container Registry which will be represented by `acr.host`, in addition we will need the Azure Container Registry username which will be represented by `acr.user`, and finally the Azure Container Registry password which will be represented by `acr.password`.  All of these can be obtained in the Azure portal by viewing your created Azure Container Registry and selecting
+The build will fail, this is to be expected as we need to add a few build variables in order for the build to run successfully.  We will need to obtain the hostname of the Azure Container Registry which will be represented by `acr.host`, in addition we will need the Azure Container Registry username which will be represented by `acr.user`, and finally the Azure Container Registry password which will be represented by `acr.password`.  All of these can be obtained in the Azure portal by viewing your created Azure Container Registry and selecting
  "Access Keys" as shown below:
 
 ![Azure Container Registry](/content/ACR.PNG)
@@ -98,7 +94,7 @@ Once you have obtained all of the necessary values, create a build definition va
 
 ![Build Definition Variables](/content/BuildDefVars.PNG)
 
-Finally, select "Save & queue", then click the "Save & queue" button:
+Finally, select the "Run" button and click "Run" in the dialogue as shown below:
 
 ![Queue Build Definition](/content/QueueBuildVSTS.PNG)
 
@@ -146,7 +142,7 @@ Next select Tasks" => "Smoke Test" and supply the appropriate Azure subscription
 
 ![Fix Endpoints 4](/content/FixAzureEndpoints4.PNG)
 
-To fix the Agent Pools, select "Tasks" => "Create Deployment" => "Agent Job" and change the Agent Pool to "Hosted Ubuntu 1604":
+To fix the Agent Pools, select "Tasks" => "Create Deployment" => "Agent Job" and change the Agent Pool to "Azure Pipelines" and set Agent Specification to "ubuntu-18.04":
 
 ![Fix Agent Pool 1](/content/AgentPool1.PNG)
 
@@ -171,21 +167,21 @@ Run `az login` to sign in with the azure cli, then run `az account list` to see 
 
     az account set --subscription <subscriptionid>
 
-Create a Service Principal for your subscription with the azure cli:
+Create a Service Principal for your subscription with the azure cli (it is suggested to use a value of 'IoTEdge-DevOps' or similar for <name>):
 
-    az ad sp create-for-rbac --name <name> --password <password>
+    az ad sp create-for-rbac --name <name>
 
 You should see output similar to:
 
     {
     "appId": "12345678-1234-1234-1234-1234567890ab",
-    "displayName": "azure-iot-edge-device-container-sp",
-    "name": "http://azure-iot-edge-device-container-sp",
+    "displayName": "IoTEdge-DevOps",
+    "name": "http://IoTEdge-DevOps",
     "password": "MyPassword",
     "tenant": "abcdefgh-abcd-abcd-abcd-abcdefghijkl"
     }
 
-Take note of the `name`, `password`, and `tenant` as these values will be used  for `spAppURl`, `spPassword`, and `tenant` respectively. 
+Take note of the `name`, `password`, and `tenant` as these values will be used  for `spAppURl`, `spPassword`, and `tenant` respectively.  Note: that some passwords could be generated with characters that can cause issues when interpreted from the Linux command line. If this is the case, for example if the resulting password contains a "` ! $", then you can either regenerate a new password by re-running the command above or you could try to wrap this value with single quotes i.e. '<password>'. Any failures that may arise in the "Smoke Test" are usually attributed to these values.  
 
 Obtain the following Parameters and supply the appropriate values for the remaining release pipeline variables:
 
@@ -196,7 +192,15 @@ Obtain the following Parameters and supply the appropriate values for the remain
 | tenantId   | The tenant id for the Service Principal | Required |
 | subscriptionId   | The azure subscription id where the IoT Hub is deployed | Required |
 
-To fix the artifact source, select "Pipeline => Add an artifact":
+To test these parameters on a local Docker on Linux instance to rule out any potential issues, you can use the following command:
+
+`
+docker run -d -e spAppUrl=<spAppURl> -e spPassword=<spPassword> -e tenantId=<tenantId> -e subscriptionId=<subscriptionId> -e iothub_name=<iothub_name> -e environment=qa --name qa-test --restart no -v /var/run/docker.sock:/var/run/docker.sock toolboc/azure-iot-edge-device-container
+`
+
+If the container fails to start, there is likely an issue with the parameters provided.  If these fail locally, they will also likely fail in the release build.
+
+Once you have properly set the variables for the Release, we need to fix the artifact source, select "Pipeline => Add an artifact":
 
 ![Add New Artifact](/content/AddNewArtifact.PNG)
 
