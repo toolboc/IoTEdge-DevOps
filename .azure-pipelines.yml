@@ -3,7 +3,7 @@
 # https://aka.ms/yaml
 
 pool:
-  name: Hosted Ubuntu 1604
+  vmImage: ubuntu-18.04
   
 steps:
 - task: CopyFiles@2
